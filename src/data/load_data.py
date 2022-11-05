@@ -9,6 +9,26 @@ def month2season(val):
     return 0
 
 
+def getgenre2idx():
+    df = pd.read_csv(
+        "/Users/taehoon/Documents/dacon_movies/data/data/movies_train.csv")
+    genre_encoding = df[['genre', 'box_off_num']].groupby(
+        'genre').mean().sort_values('box_off_num').reset_index()
+    genre2idx = {i: j for i, j in zip(
+        genre_encoding["genre"], genre_encoding["box_off_num"])}
+    return genre2idx
+
+
+def getscreening_rat2idx():
+    df = pd.read_csv(
+        "/Users/taehoon/Documents/dacon_movies/data/data/movies_train.csv")
+    screening_rat_encoding = df[['screening_rat', 'box_off_num']].groupby(
+        'screening_rat').mean().sort_values('box_off_num').reset_index()
+    screening_rat2idx = {i: j for i, j in zip(
+        screening_rat_encoding["screening_rat"], screening_rat_encoding["box_off_num"])}
+    return screening_rat2idx
+
+
 def load_data(data):
     data['release_year'] = data['release_time'].apply(
         lambda x: x.split('-')[0])
@@ -41,6 +61,12 @@ def load_data(data):
                                                            "director"].map(director2bfnum_avg)
     data["dir_prev_bfnum_len"] = data["director"].map(director2bfnum_len)
     data["dir_prev_bfnum_sum"] = data["director"].map(director2bfnum_sum)
+
+    genre2idx = getgenre2idx()
+    screening_rat2idx = getscreening_rat2idx()
+    data["new_genre"] = data["genre"].map(genre2idx)
+    data["new_screening_rat"] = data["screening_rat"].map(screening_rat2idx)
+
     data = data.drop("release_time", axis=1)
     return data
 
