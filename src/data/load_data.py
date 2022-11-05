@@ -21,17 +21,26 @@ def load_data(data):
     temp['dir_prev_bfnum'] = temp["dir_prev_bfnum"].apply(str)
     groupby_director = temp.groupby('director')['dir_prev_bfnum'].apply(
         lambda x: '|'.join(x.replace("-1.0", ""))).reset_index()
+
     groupby_director["bfnum_sum"] = groupby_director["dir_prev_bfnum"].apply(
         lambda x: sum(list(map(float, list(filter(lambda t: t, ("0|"+x).split("|")))))))
     groupby_director["bfnum_len"] = groupby_director["dir_prev_bfnum"].apply(
         lambda x: len(list(map(float, list(filter(lambda t: t, ("0|"+x).split("|")))))))
     groupby_director["bfnum_avg"] = groupby_director["bfnum_sum"] / \
         groupby_director["bfnum_len"]
+
     director2bfnum_avg = {i: j for i, j in zip(
         groupby_director["director"], groupby_director["bfnum_avg"])}
+    director2bfnum_len = {i: j for i, j in zip(
+        groupby_director["director"], groupby_director["bfnum_len"])}
+    director2bfnum_sum = {i: j for i, j in zip(
+        groupby_director["director"], groupby_director["bfnum_sum"])}
+
     bfnum_nan_index = data["dir_prev_bfnum"].isna()
     data.loc[bfnum_nan_index, "dir_prev_bfnum"] = data.loc[bfnum_nan_index,
                                                            "director"].map(director2bfnum_avg)
+    data["dir_prev_bfnum_len"] = data["director"].map(director2bfnum_len)
+    data["dir_prev_bfnum_sum"] = data["director"].map(director2bfnum_sum)
     data = data.drop("release_time", axis=1)
     return data
 
