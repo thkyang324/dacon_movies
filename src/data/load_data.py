@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 
 def month2season(val):
@@ -35,11 +36,21 @@ def load_data(data):
     return data
 
 
-def load_preprocessed_data(path=""):
-    train = load_data(pd.read_csv(path+"movies_test.csv"))
-    test = load_data(pd.read_csv(path+"movies_train.csv"))
+def load_preprocessed_data(path="/Users/taehoon/Documents/dacon_movies/data/data"):
+    train = load_data(pd.read_csv(path+"/movies_train.csv"))
+    test = load_data(pd.read_csv(path+"/movies_test.csv"))
+    temp = train["box_off_num"]
+    train = train.drop("box_off_num", axis=1)
+    train["box_off_num"] = temp
     return train, test
 
 
 if __name__ == "__main__":
-    print(load_preprocessed_data())
+    savepath = "/Users/taehoon/Documents/dacon_movies/data/data"
+    folder_name = "preprocessed_data"
+    train, test = load_preprocessed_data()
+    if folder_name not in os.listdir(savepath):
+        os.mkdir(savepath+"/"+folder_name)
+        print("*"*20 + "    make directory preprocessed_data   " + "*"*20)
+    train.to_csv(savepath+"/"+folder_name+"/preprocessed_train.csv")
+    test.to_csv(savepath+"/"+folder_name+"/preprocessed_test.csv")
