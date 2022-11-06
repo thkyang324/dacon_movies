@@ -54,12 +54,11 @@ def load_preprocessed_data(path="/Users/taehoon/Documents/dacon_movies/data/data
     return train, test
 
 
-if __name__ == "__main__":
-    savepath = "/Users/taehoon/Documents/dacon_movies/data/data"
-    folder_name = "preprocessed_data"
-    train, test = load_preprocessed_data()
-    if folder_name not in os.listdir(savepath):
-        os.mkdir(savepath+"/"+folder_name)
-        print("*"*20 + "    make directory preprocessed_data   " + "*"*20)
-    train.to_csv(savepath+"/"+folder_name+"/preprocessed_train.csv")
-    test.to_csv(savepath+"/"+folder_name+"/preprocessed_test.csv")
+savepath = "/Users/taehoon/Documents/dacon_movies/data/data"
+folder_name = "preprocessed_data"
+train, test = load_preprocessed_data()
+if folder_name not in os.listdir(savepath):
+    os.mkdir(savepath+"/"+folder_name)
+    print("*"*20 + "    make directory preprocessed_data   " + "*"*20)
+train.to_csv(savepath+"/"+folder_name+"/preprocessed_train.csv")
+test.to_csv(savepath+"/"+folder_name+"/preprocessed_test.csv")
