@@ -8,7 +8,7 @@ from bayes_opt import BayesianOptimization
 import numpy as np
 import time
 
-path = "/Users/taehoon/Documents/DACON/example_movies/dacon_movies/data"
+path = "../../data"
 route = path+"/preprocessed_data/preprocessed_"
 train, test = pd.read_csv(
     route+"train.csv", index_col=0), pd.read_csv(route+"test.csv", index_col=0)
@@ -67,7 +67,7 @@ pbounds = {"n_estimators": (500, 1000),
            }
 bo = BayesianOptimization(f=cbt_reg, pbounds=pbounds,
                           verbose=2, random_state=42)
-bo.maximize(init_points=2, n_iter=500, acq='ei', xi=0.01)
+bo.maximize(init_points=2, n_iter=100, acq='ei', xi=0.01)
 high_score = bo.max
 1-cbt_reg(**high_score["params"])
 
@@ -85,7 +85,6 @@ final_model.fit(train_x, train_y, silent=True)
 
 daytime = time.localtime()
 
-submission = pd.read_csv(
-    "/Users/taehoon/Documents/dacon_movies/data/data/submission.csv", index_col=0)
+submission = pd.read_csv("../../data/submission.csv", index_col=0)
 submission["box_off_num"] = final_model.predict(test)
 submission.to_csv("submission__"+"_".join(list(map(str, daytime)))+"__.csv")
