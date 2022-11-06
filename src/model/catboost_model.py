@@ -88,3 +88,5 @@ daytime = time.localtime()
 submission = pd.read_csv("../../data/submission.csv", index_col=0)
 submission["box_off_num"] = final_model.predict(test)
 submission.to_csv("submission__"+"_".join(list(map(str, daytime)))+"__.csv")
+
+# seed 추가 / k-fold
